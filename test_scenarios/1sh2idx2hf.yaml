@@ -23,6 +23,7 @@ services:
       - SPLUNK_ROLE=splunk_search_head
       - SPLUNK_LICENSE_URI
       - DEBUG=true
+      - SPLUNK_PASSWORD
     ports:
       - 8000
       - 8089
@@ -44,6 +45,7 @@ services:
       - SPLUNK_ROLE=splunk_indexer
       - SPLUNK_LICENSE_URI
       - DEBUG=true
+      - SPLUNK_PASSWORD
     ports:
       - 8000
       - 8089
@@ -65,6 +67,7 @@ services:
       - SPLUNK_ROLE=splunk_indexer
       - SPLUNK_LICENSE_URI
       - DEBUG=true
+      - SPLUNK_PASSWORD
     ports:
       - 8000
       - 8089
@@ -86,6 +89,7 @@ services:
       - SPLUNK_ROLE=splunk_heavy_forwarder
       - SPLUNK_LICENSE_URI
       - DEBUG=true
+      - SPLUNK_PASSWORD
     ports:
       - 8000
       - 8089
@@ -107,7 +111,29 @@ services:
       - SPLUNK_ROLE=splunk_heavy_forwarder
       - SPLUNK_LICENSE_URI
       - DEBUG=true
+      - SPLUNK_PASSWORD
     ports:
       - 8000
       - 8089
       
+  dmc:
+    networks:
+      splunknet:
+        aliases:
+          - dmc
+    image: ${SPLUNK_IMAGE:-splunk/splunk:latest}
+    command: start
+    hostname: dmc
+    container_name: dmc
+    environment:
+      - SPLUNK_START_ARGS=--accept-license
+      - SPLUNK_SEARCH_HEAD_URL=sh1
+      - SPLUNK_INDEXER_URL=idx1,idx2
+      - SPLUNK_HEAVY_FORWARDER_URL=hf1,hf2
+      - SPLUNK_ROLE=splunk_monitor
+      - SPLUNK_LICENSE_URI
+      - SPLUNK_PASSWORD
+      - DEBUG=true
+    ports:
+      - 8000
+      - 8089
